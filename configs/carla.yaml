@@ -1,6 +1,6 @@
 expname: carla_128
 data:
-  imsize: 128
+  imsize: 64
   datadir: data/carla
   type: carla
   radius: 10.
