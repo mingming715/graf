@@ -4,6 +4,7 @@ import torch.nn as nn
 
 class Discriminator(nn.Module):
     def __init__(self, nc=3, ndf=64, imsize=64, hflip=False):
+        # parent class의 Discriminator을 상속
         super(Discriminator, self).__init__()
         self.nc = nc
         assert(imsize==32 or imsize==64 or imsize==128)
@@ -16,6 +17,18 @@ class Discriminator(nn.Module):
         blocks = []
         if self.imsize==128:
             blocks += [
+                '''torch.nn.Conv2d(
+                                in_channels, 
+                                out_channels, 
+                                kernel_size, 
+                                stride=1, 
+                                padding=0, 
+                                dilation=1, 
+                                groups=1, 
+                                bias=True, 
+                                padding_mode='zeros'
+                            )'''
+                # input channels nc, output channels 64, kernel size 4x4, stride 1, bias false
                 # input is (nc) x 128 x 128
                 SN(nn.Conv2d(nc, ndf//2, 4, 2, 1, bias=False)),
                 nn.LeakyReLU(0.2, inplace=True),
@@ -36,7 +49,7 @@ class Discriminator(nn.Module):
                 nn.LeakyReLU(0.2, inplace=True),
                 # state size. (ndf) x 32 x 32
                 SN(nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False)),
-                #nn.BatchNorm2d(ndf * 2),
+                # Batchnorm ndf*2 사용
                 IN(ndf * 2),
                 nn.LeakyReLU(0.2, inplace=True),
             ]
